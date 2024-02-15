@@ -1,3 +1,6 @@
+import { roomsDatabase, types } from '@/stores/roomsDatabase';
+import { randomRange } from '@/utils/random-range';
+
 const possibleSteps = [
   [0, 1],
   [0, -1],
@@ -21,8 +24,8 @@ export const createMap = (mapWidth: number, mapHeight: number, roomsCount: numbe
 
     if (!map[tempY][tempX]) {
       map[tempY][tempX] = {
-        type: 'enemy',
-        enemies: [{ name: 'Ebaka', health: 100, armor: 10, damage: 15 }],
+        type: types[randomRange(0, types.length - 1)],
+        enemies: roomsDatabase[randomRange(0, roomsDatabase.length - 1)],
       };
 
       currentX = tempX;

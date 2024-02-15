@@ -10,6 +10,7 @@ export interface Enemy {
   health: number;
   armor: number;
   damage: number;
+  image: string;
 }
 
 export interface EnemyRoom {
