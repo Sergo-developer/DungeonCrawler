@@ -12,15 +12,39 @@ export interface Enemy {
   damage: number;
   image: string;
 }
+export interface Player {
+  level: number;
+  experience: number;
+  health: number;
+  maxHealth: number;
+  strength: number;
+  intelligent: number;
+  statsPoint: number;
+  critChance: number;
+  critMod: number;
+  damage: number;
+  armor: number;
+  agility: number;
+}
+
+export interface PointsAddedByLevel {
+  intelligent: number;
+  strength: number;
+  agility: number;
+}
+export interface Type {
+  name: string;
+  image: string;
+}
 
 export interface EnemyRoom {
-  type: 'enemy';
+  type: Type;
   isDefeated?: boolean;
-  enemies: Enemy[];
+  enemy: Enemy;
 }
 
 export interface StartRoom {
-  type: 'start';
+  type: Type;
 }
 
 export type MapRoom = EnemyRoom | StartRoom | null;
@@ -32,4 +56,7 @@ export interface State {
   currentPosition: Ref<MapCoordinate>;
   currentRoom: ComputedRef<PlayableRoom>;
   movePosition: (x: number, y: number) => void;
+  fightStep: () => void;
+  player: Ref<Player>;
+  pointsAddedByLevel: Ref<PointsAddedByLevel>;
 }

@@ -2,18 +2,19 @@
 import { computed, inject } from 'vue';
 import type { State } from '@/types/map';
 import EnemyScreen from '@/components/EnemyScreen.vue';
+import PlayerStats from '@/components/PlayerStats.vue';
 
-const { currentRoom, movePosition } = inject('state') as State;
+const { currentRoom, movePosition, player } = inject('state') as State;
 
 const isMoveButtonsEnabled = computed(
-  () => currentRoom.value.type !== 'enemy' || currentRoom.value.isDefeated,
+  () => currentRoom.value.type.name !== 'enemy' || currentRoom.value.isDefeated,
 );
 </script>
 
 <template>
   <div class="main-screen-wrapper">
     <div class="main-screen">
-      <EnemyScreen v-if="!isMoveButtonsEnabled" />
+      <EnemyScreen v-if="currentRoom.type.name === 'enemy'" />
       <div v-if="isMoveButtonsEnabled" class="move-buttons">
         <div class="move-button-element button-left" @click="movePosition(-1, 0)"></div>
         <div>
@@ -24,6 +25,7 @@ const isMoveButtonsEnabled = computed(
       </div>
     </div>
   </div>
+  <PlayerStats />
 </template>
 
 <style scoped>
@@ -44,6 +46,7 @@ const isMoveButtonsEnabled = computed(
   background-size: 60px;
   background-image: url('/textures/ui/arrow.png');
   &.button-left {
+    transform: rotate(0deg);
   }
   &.button-up {
     transform: rotate(90deg);
@@ -56,14 +59,17 @@ const isMoveButtonsEnabled = computed(
   }
 }
 .main-screen {
-  display: flex;
-  justify-content: space-around;
-  align-items: flex-end;
+  display: grid;
+  justify-items: center;
   margin-top: -10%;
   height: 600px;
   width: 800px;
-  background-color: #66b5b7;
+  background-image: url('/textures/ui/dungeonBg.png');
   border: 25px solid transparent;
   border-image: url('/textures/ui/border.png') 4 round;
+}
+.main-screen:hover {
+  transition: 1s;
+  background-color: black;
 }
 </style>
