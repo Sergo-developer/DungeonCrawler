@@ -10,6 +10,7 @@ export interface Enemy {
   health: number;
   armor: number;
   damage: number;
+  xp: number;
   image: string;
 }
 export interface Player {
@@ -59,4 +60,6 @@ export interface State {
   fightStep: () => void;
   player: Ref<Player>;
   pointsAddedByLevel: Ref<PointsAddedByLevel>;
+  isFight: Ref<boolean>;
+  totalPlayerDamage: Ref<number>;
 }

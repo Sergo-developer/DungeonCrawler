@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { inject } from 'vue';
+import { inject, ref } from 'vue';
 import type { State } from '@/types/map';
 
-const { currentRoom, fightStep } = inject('state') as State;
+const { currentRoom, fightStep, isFight, totalPlayerDamage } = inject('state') as State;
 
-const enemyMaxHealth = currentRoom.value.enemy.health;
+const enemyMaxHealth = ref(currentRoom.value.enemy.health);
 </script>
 
 <template>
@@ -21,8 +21,17 @@ const enemyMaxHealth = currentRoom.value.enemy.health;
         </div>
       </div>
     </div>
-    <div class="enemy-image" :style="{ backgroundImage: `url(${currentRoom.enemy.image})` }"></div>
-    <div v-if="!currentRoom.isDefeated" class="attack-button" @click="fightStep">attack</div>
+    <div
+      class="enemy-image"
+      :class="{ attacked: isFight }"
+      :style="{ backgroundImage: `url(${currentRoom.enemy.image})` }"
+    >
+      <div v-if="isFight">-{{ totalPlayerDamage }}</div>
+    </div>
+    <div v-if="!currentRoom.isDefeated">
+      <div v-if="!isFight" class="attack-button" @click="fightStep">Attack</div>
+      <div v-if="isFight" class="attack-button">...</div>
+    </div>
   </div>
 </template>
 <style scoped>
@@ -47,7 +56,7 @@ const enemyMaxHealth = currentRoom.value.enemy.health;
 .enemy-health-bar {
   width: 300px;
   height: 20px;
-  background-color: darkred;
+  background-color: #540000;
   border: solid 10px transparent;
   border-image: url('/textures/ui/borderGold.png') 2 round;
 }
@@ -65,14 +74,33 @@ const enemyMaxHealth = currentRoom.value.enemy.health;
   justify-items: center;
 }
 .enemy-image {
+  transition: 0.5s;
   background-size: 320px;
+  text-align: center;
   height: 320px;
   width: 320px;
   filter: drop-shadow(5px 5px 5px #000000);
 }
 .enemy-image.attacked {
-  transition: 1s;
-  transform: rotate(9deg);
+  animation: shaker 0.2s;
+}
+
+@keyframes shaker {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(7px);
+  }
+  50% {
+    transform: translateX(-7px);
+  }
+  75% {
+    transform: translateX(7px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 .attack-button {
   display: flex;
