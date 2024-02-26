@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { inject, ref } from 'vue';
+import { inject, ref, watch } from 'vue';
 import type { State } from '@/types/map';
 
 const { currentRoom, fightStep, isFight, totalPlayerDamage } = inject('state') as State;
 
 const enemyMaxHealth = ref(currentRoom.value.enemy.health);
+
+watch(currentRoom, (value) => {
+  enemyMaxHealth.value = value.enemy.health;
+});
 </script>
 
 <template>
@@ -40,6 +44,7 @@ const enemyMaxHealth = ref(currentRoom.value.enemy.health);
   gap: 10px;
   align-content: space-around;
 }
+
 .enemy-level {
   background-color: #ff6e00;
   color: #ffffff;

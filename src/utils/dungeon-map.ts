@@ -24,8 +24,8 @@ export const createMap = (mapWidth: number, mapHeight: number, roomsCount: numbe
 
     if (!map[tempY][tempX]) {
       map[tempY][tempX] = {
-        type: types[randomRange(0, types.length - 1)],
-        enemy: roomsDatabase[randomRange(0, roomsDatabase.length - 1)],
+        type: structuredClone(types[randomRange(0, types.length - 1)]),
+        enemy: structuredClone(roomsDatabase[randomRange(0, roomsDatabase.length - 1)]),
       };
 
       currentX = tempX;

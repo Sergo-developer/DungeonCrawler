@@ -12,20 +12,22 @@ const isMoveButtonsEnabled = computed(
 </script>
 
 <template>
-  <div class="main-screen-wrapper">
-    <div class="main-screen">
-      <EnemyScreen v-if="currentRoom.type.name === 'enemy'" />
-      <div v-if="isMoveButtonsEnabled" class="move-buttons">
-        <div class="move-button-element button-left" @click="movePosition(-1, 0)"></div>
-        <div>
-          <div class="move-button-element button-up" @click="movePosition(0, -1)"></div>
-          <div class="move-button-element button-down" @click="movePosition(0, 1)"></div>
+  <div>
+    <div class="main-screen-wrapper">
+      <div class="main-screen">
+        <EnemyScreen v-if="currentRoom.type.name === 'enemy'" />
+        <div v-if="isMoveButtonsEnabled" class="move-buttons">
+          <div class="move-button-element button-left" @click="movePosition(-1, 0)"></div>
+          <div>
+            <div class="move-button-element button-up" @click="movePosition(0, -1)"></div>
+            <div class="move-button-element button-down" @click="movePosition(0, 1)"></div>
+          </div>
+          <div class="move-button-element button-right" @click="movePosition(1, 0)"></div>
         </div>
-        <div class="move-button-element button-right" @click="movePosition(1, 0)"></div>
       </div>
     </div>
+    <PlayerStats />
   </div>
-  <PlayerStats />
 </template>
 
 <style scoped>
@@ -61,7 +63,6 @@ const isMoveButtonsEnabled = computed(
 .main-screen {
   display: grid;
   justify-items: center;
-  margin-top: -10%;
   height: 600px;
   width: 800px;
   background-image: url('/textures/ui/dungeonBg.png');
