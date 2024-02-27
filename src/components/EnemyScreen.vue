@@ -1,14 +1,18 @@
 <script setup lang="ts">
-import { inject, ref, watch } from 'vue';
-import type { State } from '@/types/map';
+import { type ComputedRef, inject, ref, watch } from 'vue';
+import type { EnemyRoom, State } from '@/types/map';
 
 const { currentRoom, fightStep, isFight, totalPlayerDamage } = inject('state') as State;
 
-const enemyMaxHealth = ref(currentRoom.value.enemy.health);
+const enemyMaxHealth = ref(0);
 
-watch(currentRoom, (value) => {
-  enemyMaxHealth.value = value.enemy.health;
-});
+watch(
+  currentRoom as ComputedRef<EnemyRoom>,
+  (value) => {
+    enemyMaxHealth.value = value.enemy.health;
+  },
+  { immediate: true },
+);
 </script>
 
 <template>
@@ -54,10 +58,12 @@ watch(currentRoom, (value) => {
   border-image: url('/textures/ui/borderGold.png') 2 round;
   text-align: center;
 }
+
 .enemy-name {
   display: grid;
   justify-items: center;
 }
+
 .enemy-health-bar {
   width: 300px;
   height: 20px;
@@ -65,12 +71,14 @@ watch(currentRoom, (value) => {
   border: solid 10px transparent;
   border-image: url('/textures/ui/borderGold.png') 2 round;
 }
+
 .enemy-bar {
   height: 20px;
   background-image: url('/textures/ui/healthbar.png');
   background-size: 32px 32px;
   color: white;
 }
+
 .enemy-wrapper {
   color: white;
   font-size: 20px;
@@ -78,6 +86,7 @@ watch(currentRoom, (value) => {
   gap: 2px;
   justify-items: center;
 }
+
 .enemy-image {
   transition: 0.5s;
   background-size: 320px;
@@ -86,6 +95,7 @@ watch(currentRoom, (value) => {
   width: 320px;
   filter: drop-shadow(5px 5px 5px #000000);
 }
+
 .enemy-image.attacked {
   animation: shaker 0.2s;
 }
@@ -107,6 +117,7 @@ watch(currentRoom, (value) => {
     transform: translateX(0);
   }
 }
+
 .attack-button {
   display: flex;
   align-items: center;
@@ -119,6 +130,7 @@ watch(currentRoom, (value) => {
   color: darkred;
   cursor: pointer;
 }
+
 .attack-button:hover {
   color: red;
   box-sizing: border-box;

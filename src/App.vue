@@ -29,6 +29,7 @@ provide('state', state);
   display: flex;
   justify-content: center;
 }
+
 .game-wrapper {
   background-image: url('/textures/ui/bricks.png');
   height: 100vh;

@@ -1,9 +1,11 @@
-export const types = [
+import type { Enemy, Type } from '@/types/map';
+
+export const types: Type[] = [
   { name: 'enemy', image: '/textures/ui/mapIcons/enemy.png' },
   { name: 'treasure', image: '/textures/ui/mapIcons/chest.png' },
   { name: 'empty', image: '' },
 ];
-export const roomsDatabase = [
+export const roomsDatabase: Enemy[] = [
   {
     name: 'Ebaka',
     health: 100,

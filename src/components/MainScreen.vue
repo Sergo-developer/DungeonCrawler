@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed, inject } from 'vue';
-import type { State } from '@/types/map';
+import type { EnemyRoom, State } from '@/types/map';
 import EnemyScreen from '@/components/EnemyScreen.vue';
 import PlayerStats from '@/components/PlayerStats.vue';
 
-const { currentRoom, movePosition, player } = inject('state') as State;
+const { currentRoom, movePosition } = inject('state') as State;
 
 const isMoveButtonsEnabled = computed(
-  () => currentRoom.value.type.name !== 'enemy' || currentRoom.value.isDefeated,
+  () => currentRoom.value.type.name !== 'enemy' || (currentRoom.value as EnemyRoom).isDefeated,
 );
 </script>
 
