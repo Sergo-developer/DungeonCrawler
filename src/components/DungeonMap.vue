@@ -14,10 +14,9 @@ const checkIsCurrentRoom = (x: number, y: number) =>
         v-for="(room, x) in row"
         :key="x"
         class="dungeon-map-room"
-        :class="{ 'current-position': checkIsCurrentRoom(x, y) }"
-      >
-        {{ room?.type }}
-      </div>
+        :class="{ 'playable-room': room, 'current-position': checkIsCurrentRoom(x, y) }"
+        :style="{ backgroundImage: `url(${room?.type.image})` }"
+      ></div>
     </div>
   </div>
 </template>
@@ -25,6 +24,11 @@ const checkIsCurrentRoom = (x: number, y: number) =>
 <style scoped>
 .dungeon-map {
   display: grid;
+  width: fit-content;
+  background-image: url('/textures/ui/planksTexture.png');
+  background-size: 64px, 64px;
+  border: solid 10px transparent;
+  border-image: url('/textures/ui/borderGold.png') 2 round;
 }
 
 .dungeon-map-row {
@@ -35,11 +39,15 @@ const checkIsCurrentRoom = (x: number, y: number) =>
 .dungeon-map-room {
   width: 32px;
   height: 32px;
-  background-color: #ffffff;
-  border: solid 1px #66b5b7;
+  background-size: 22px, 22px;
+  background-repeat: no-repeat;
 }
-
+.dungeon-map-room.playable-room {
+  box-sizing: border-box;
+  border: ridge 5px #d3b000;
+}
 .dungeon-map-room.current-position {
-  background-color: rgb(41, 15, 35);
+  box-sizing: border-box;
+  border: ridge 5px #ffffff;
 }
 </style>
