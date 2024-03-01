@@ -3,11 +3,12 @@ import { computed, inject } from 'vue';
 import type { EnemyRoom, State } from '@/types/map';
 import EnemyScreen from '@/components/EnemyScreen.vue';
 import PlayerStats from '@/components/PlayerStats.vue';
+import TreasureScreen from '@/components/TreasureScreen.vue';
 
 const { currentRoom, movePosition } = inject('state') as State;
 
 const isMoveButtonsEnabled = computed(
-  () => currentRoom.value.type.name !== 'enemy' || (currentRoom.value as EnemyRoom).isDefeated,
+  () => currentRoom.value.type !== 'enemy' || (currentRoom.value as EnemyRoom).isDefeated,
 );
 </script>
 
@@ -15,7 +16,8 @@ const isMoveButtonsEnabled = computed(
   <div>
     <div class="main-screen-wrapper">
       <div class="main-screen">
-        <EnemyScreen v-if="currentRoom.type.name === 'enemy'" />
+        <EnemyScreen v-if="currentRoom.type === 'enemy'" />
+        <TreasureScreen v-if="currentRoom.type === 'treasure'" />
         <div v-if="isMoveButtonsEnabled" class="move-buttons">
           <div class="move-button-element button-left" @click="movePosition(-1, 0)"></div>
           <div>
@@ -42,6 +44,7 @@ const isMoveButtonsEnabled = computed(
   align-items: end;
 }
 .move-button-element {
+  cursor: pointer;
   background-repeat: no-repeat;
   height: 60px;
   width: 60px;

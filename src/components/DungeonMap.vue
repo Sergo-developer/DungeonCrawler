@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { State } from '@/types/map';
 import { inject } from 'vue';
+import { mapImage } from '@/stores/roomsDatabase';
 
 const { map, currentPosition } = inject('state') as State;
 
@@ -15,7 +16,7 @@ const checkIsCurrentRoom = (x: number, y: number) =>
         :key="x"
         class="dungeon-map-room"
         :class="{ 'playable-room': room, 'current-position': checkIsCurrentRoom(x, y) }"
-        :style="{ backgroundImage: `url(${room?.type.image})` }"
+        :style="{ backgroundImage: `url(${mapImage[room?.type || 'empty']})` }"
       ></div>
     </div>
   </div>
