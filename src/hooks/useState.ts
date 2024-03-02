@@ -9,7 +9,16 @@ export const useState = (): State => {
   const { player, pointsAddedByLevel } = usePlayer();
   const { map, currentPosition, movePosition, currentRoom } = useMap();
   const { fightStep, isFight, totalPlayerDamage } = useFight(player, currentRoom as Ref<EnemyRoom>);
-  const { useItem, addItem, inventoryItems, loadoutItems } = useItems();
+
+  const {
+    useItem,
+    addItem,
+    inventoryItems,
+    loadoutItems,
+    unequipItem,
+    hoveredItem,
+    getOnHoverItemInfo,
+  } = useItems(player);
 
   return {
     map,
@@ -25,5 +34,8 @@ export const useState = (): State => {
     addItem,
     inventoryItems,
     loadoutItems,
+    unequipItem,
+    hoveredItem,
+    getOnHoverItemInfo,
   };
 };

@@ -66,8 +66,11 @@ export interface State {
   pointsAddedByLevel: Ref<PointsAddedByLevel>;
   isFight: Ref<boolean>;
   totalPlayerDamage: Ref<number>;
-  useItem: () => void;
+  useItem: (i: number) => void;
   addItem: (itemToGet: Items[]) => void;
   inventoryItems: SlotCount;
   loadoutItems: SlotCount;
+  unequipItem: (i: number) => void;
+  hoveredItem: Ref<SlotCount>;
+  getOnHoverItemInfo: (item: SlotCount) => void;
 }

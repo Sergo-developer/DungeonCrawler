@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { inject, ref } from 'vue';
-import { items } from '@/stores/itemsDatabase';
+import { items, quality } from '@/stores/itemsDatabase';
 import { randomRange } from '@/utils/random-range';
 import type { State } from '@/types/map';
 
-const { currentRoom, addItem } = inject('state') as State;
+const { currentRoom, addItem, getOnHoverItemInfo } = inject('state') as State;
 const rewardItems = ref([]);
 
 const openChest = () => {
@@ -27,7 +27,14 @@ const confirmEarnedItems = () => {
     <div v-if="currentRoom.treasure.isOpened" class="reward-window">
       You took out from the chest:
       <div class="reward-item-wrapper">
-        <div v-for="(item, i) in rewardItems" :key="i" class="reward-item">
+        <div
+          v-for="(item, i) in rewardItems"
+          :key="i"
+          class="reward-item"
+          :style="{ borderColor: quality[item?.quality] }"
+          @mouseover="getOnHoverItemInfo(item)"
+          @mouseleave="getOnHoverItemInfo(null)"
+        >
           <div :style="{ backgroundImage: `url(${item?.image})` }" class="reward-item-image"></div>
         </div>
       </div>

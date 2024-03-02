@@ -11,10 +11,10 @@ export const mapImage = {
 export const roomsDatabase: Enemy[] = [
   {
     name: 'Ebaka',
-    health: 100,
+    health: 65,
     armor: 10,
     damage: 15,
-    xp: 100,
+    xp: 200,
     image: '/textures/enemies/skeleton.png',
   },
   {
@@ -27,7 +27,7 @@ export const roomsDatabase: Enemy[] = [
   },
   {
     name: 'Skeleton',
-    health: 100,
+    health: 55,
     armor: 5,
     damage: 10,
     xp: 150,
