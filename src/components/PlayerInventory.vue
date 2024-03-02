@@ -55,7 +55,12 @@ const { player, useItem, inventoryItems, loadoutItems, unequipItem, getOnHoverIt
       </div>
       <div class="stats-wrapper">
         <div>Damage: {{ player.damage }}</div>
+        <div>Crit chance: {{ player.critChance }}</div>
+        <div>Crit modificator: {{ player.critMod }}</div>
         <div>Armor: {{ player.armor }}</div>
+        <div>Intelligent: {{ player.intelligent }}</div>
+        <div>Strength: {{ player.strength }}</div>
+        <div>Agility: {{ player.agility }}</div>
       </div>
       <div>
         <div
@@ -145,6 +150,7 @@ const { player, useItem, inventoryItems, loadoutItems, unequipItem, getOnHoverIt
 }
 
 .stats-wrapper {
+  display: grid;
   text-align: center;
   color: white;
   background-color: black;

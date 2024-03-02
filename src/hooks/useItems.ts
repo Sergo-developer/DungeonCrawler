@@ -16,6 +16,8 @@ export const useItems = (player: Ref<Player>) => {
     hoveredItem.value = item;
   };
 
+  
+
   const useItem = (i: number) => {
     if (inventoryItems.value[i] != null) {
       for (let j = 0; j < itemTypesToEquip.length; j++) {
