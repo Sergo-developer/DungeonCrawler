@@ -9,7 +9,7 @@ export const usePlayer = () => {
     health: 100,
     maxHealth: 100,
     intelligent: 0,
-    strength: 100,
+    strength: 0,
     damage: 10,
     critChance: 0,
     critMod: 0,

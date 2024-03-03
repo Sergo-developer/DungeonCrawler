@@ -1,4 +1,5 @@
 import type { ComputedRef, Ref } from 'vue';
+import type { Items, SlotCount } from '@/types/items';
 
 export interface MapCoordinate {
   x: number;
@@ -13,6 +14,7 @@ export interface Enemy {
   xp: number;
   image: string;
 }
+
 export interface Player {
   level: number;
   experience: number;
@@ -33,23 +35,25 @@ export interface PointsAddedByLevel {
   strength: number;
   agility: number;
 }
-export interface Type {
-  name: string;
-  image: string;
-}
+
+export type RoomType = 'enemy' | 'treasure' | 'empty';
 
 export interface EnemyRoom {
-  type: Type;
-  isDefeated?: boolean;
+  type: 'enemy';
   enemy: Enemy;
+  isDefeated?: boolean;
 }
 
-export interface StartRoom {
-  type: Type;
+export interface EmptyRoom {
+  type: 'empty';
+}
+export interface TreasureRoom {
+  type: 'treasure';
+  treasure: { isOpened: boolean };
 }
 
-export type MapRoom = EnemyRoom | StartRoom | null;
-export type PlayableRoom = EnemyRoom | StartRoom;
+export type MapRoom = EnemyRoom | EmptyRoom | TreasureRoom | null;
+export type PlayableRoom = EnemyRoom | EmptyRoom;
 export type Map = MapRoom[][];
 
 export interface State {
@@ -62,4 +66,11 @@ export interface State {
   pointsAddedByLevel: Ref<PointsAddedByLevel>;
   isFight: Ref<boolean>;
   totalPlayerDamage: Ref<number>;
+  useItem: (i: number) => void;
+  addItem: (itemToGet: Items[]) => void;
+  inventoryItems: SlotCount;
+  loadoutItems: SlotCount;
+  unequipItem: (i: number) => void;
+  hoveredItem: Ref<SlotCount>;
+  getOnHoverItemInfo: (item: SlotCount) => void;
 }

@@ -8,6 +8,28 @@ const possibleSteps = [
   [-1, 0],
 ];
 
+const getRandomRoomByType = () => {
+  const type = types[randomRange(0, types.length - 1)];
+
+  if (type === 'enemy') {
+    return {
+      type: type,
+      enemy: structuredClone(roomsDatabase[randomRange(0, roomsDatabase.length - 1)]),
+    };
+  } else if (type === 'treasure') {
+    return {
+      type: type,
+      treasure: {
+        isOpened: false,
+      },
+    };
+  } else if (type === 'empty') {
+    return {
+      type: type,
+    };
+  }
+};
+
 export const createMap = (mapWidth: number, mapHeight: number, roomsCount: number) => {
   const row = new Array(mapWidth).fill(null);
   const map = Array.from({ length: mapHeight }, () => structuredClone(row));
@@ -23,10 +45,7 @@ export const createMap = (mapWidth: number, mapHeight: number, roomsCount: numbe
     const tempY = currentY + randomDirection[1];
 
     if (!map[tempY][tempX]) {
-      map[tempY][tempX] = {
-        type: structuredClone(types[randomRange(0, types.length - 1)]),
-        enemy: structuredClone(roomsDatabase[randomRange(0, roomsDatabase.length - 1)]),
-      };
+      map[tempY][tempX] = getRandomRoomByType();
 
       currentX = tempX;
       currentY = tempY;
