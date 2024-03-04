@@ -5,6 +5,7 @@ import MainScreen from '@/components/MainScreen.vue';
 import { useState } from '@/hooks/useState';
 import type { State } from './types/map';
 import PlayerInventory from '@/components/PlayerInventory.vue';
+import CheatMenu from '@/components/CheatMenu.vue';
 
 const state: State = useState();
 
@@ -14,6 +15,7 @@ provide('state', state);
 <template>
   <div class="game-wrapper">
     <DungeonMap />
+    <CheatMenu />
     <div class="center">
       <MainScreen />
       <PlayerInventory />

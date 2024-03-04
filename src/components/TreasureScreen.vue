@@ -9,7 +9,7 @@ const rewardItems = ref([]);
 
 const openChest = () => {
   for (let i = 0; i < randomRange(1, 3); i++) {
-    rewardItems.value[i] = structuredClone(items[randomRange(0, items.length - 1)]);
+    rewardItems.value[i] = structuredClone(items[randomRange(0, items.length) - 1]);
   }
 
   currentRoom.value.treasure.isOpened = true;

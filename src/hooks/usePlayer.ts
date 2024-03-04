@@ -8,12 +8,12 @@ export const usePlayer = () => {
     statsPoint: 0,
     health: 100,
     maxHealth: 100,
-    intelligent: 0,
-    strength: 0,
-    damage: 10,
+    damage: 0,
     critChance: 0,
     critMod: 0,
-    armor: 1,
+    armor: 0,
+    intelligent: 0,
+    strength: 0,
     agility: 0,
   });
 

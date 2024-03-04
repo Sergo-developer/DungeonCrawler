@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { quality } from '@/stores/itemsDatabase';
-import { inject, ref } from 'vue';
+import { inject } from 'vue';
 import type { State } from '@/types/map';
 import PlayerInventoryTooltip from '@/components/PlayerInventoryTooltip.vue';
 
@@ -55,8 +55,8 @@ const { player, useItem, inventoryItems, loadoutItems, unequipItem, getOnHoverIt
       </div>
       <div class="stats-wrapper">
         <div>Damage: {{ player.damage }}</div>
-        <div>Crit chance: {{ player.critChance }}</div>
-        <div>Crit modificator: {{ player.critMod }}</div>
+        <div>Crit chance: {{ player.critChance }}%</div>
+        <div>Crit modificator: {{ player.critMod }}x</div>
         <div>Armor: {{ player.armor }}</div>
         <div>Intelligent: {{ player.intelligent }}</div>
         <div>Strength: {{ player.strength }}</div>
@@ -121,7 +121,7 @@ const { player, useItem, inventoryItems, loadoutItems, unequipItem, getOnHoverIt
         @mouseleave="getOnHoverItemInfo(null)"
       >
         <div class="item-image" :style="{ backgroundImage: `url(${item?.image})` }">
-          {{ item?.count }}
+          {{ item?.count > 1 ? item?.count : '' }}
         </div>
       </div>
     </div>
