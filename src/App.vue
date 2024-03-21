@@ -1,41 +1,96 @@
 <script setup lang="ts">
-import { provide } from 'vue';
+import { inject, provide, ref } from 'vue';
 import DungeonMap from '@/components/DungeonMap.vue';
 import MainScreen from '@/components/MainScreen.vue';
 import { useState } from '@/hooks/useState';
 import type { State } from './types/map';
 import PlayerInventory from '@/components/PlayerInventory.vue';
 import CheatMenu from '@/components/CheatMenu.vue';
+import GameLog from '@/components/GameLog.vue';
 
 const state: State = useState();
+const curentScreen = ref('dungeon');
+
+const switchCurentScreen = (screen: 'dungeon' | 'stats' | 'achievements' | 'cheat') => {
+  curentScreen.value = screen;
+};
 
 provide('state', state);
+
+const { addItem, getLootPool } = state as State;
+
+addItem(getLootPool(['Knife']));
 </script>
 
 <template>
+  <div class="menu">
+    <div @click="switchCurentScreen('dungeon')" class="menu-button">Dungeon</div>
+    <div @click="switchCurentScreen('stats')" class="menu-button">Stats</div>
+    <div @click="switchCurentScreen('achievements')" class="menu-button">Achievements</div>
+    <div @click="switchCurentScreen('cheat')" class="menu-button">Cheat-menu</div>
+  </div>
   <div class="game-wrapper">
-    <DungeonMap />
-    <CheatMenu />
-    <div class="center">
-      <MainScreen />
-      <PlayerInventory />
+    <div v-if="curentScreen === 'dungeon'" class="game-main-area">
+      <div class="left-menu">
+        <DungeonMap />
+        <GameLog />
+      </div>
+      <div class="center">
+        <MainScreen />
+        <PlayerInventory />
+      </div>
     </div>
+    <div v-if="curentScreen === 'stats'">Stats here</div>
+    <div v-if="curentScreen === 'achievements'">achievements</div>
+    <div v-if="curentScreen === 'cheat'"><CheatMenu /></div>
   </div>
 </template>
 
 <style scoped>
-.center {
-  margin-left: 25%;
-  margin-top: -10%;
-  gap: 10px;
+.left-menu {
+  border: 25px solid transparent;
+  border-right: 0px;
+  border-image: url('/textures/ui/border.png') 4 round;
   display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.menu-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: white;
+  border: transparent 10px solid;
+  border-image: url('/textures/ui/borderGold.png') 2 round;
+  background-color: #3b2817;
+  width: 100px;
+}
+.menu-button:hover {
+  color: #3b2817;
+  background-color: white;
+}
+.menu {
+  width: 100%;
+  height: 50px;
+  background-image: url('/textures/ui/rock.png');
+  background-size: 50px 50px;
+  display: flex;
+  justify-content: flex-start;
+}
+.center {
+  display: flex;
+}
+
+.game-main-area {
+  display: grid;
+  grid-template-columns: repeat(2, 0fr);
   justify-content: center;
 }
 
 .game-wrapper {
-  background-image: url('/textures/ui/bricks.png');
-  height: 100vh;
-  background-size: 80px;
+  display: flex;
+  height: 100%;
   image-rendering: pixelated;
 }
 </style>

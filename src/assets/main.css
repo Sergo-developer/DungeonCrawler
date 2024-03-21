@@ -1,4 +1,7 @@
 body {
   margin: 0;
   user-select: none;
+  background-size: 80px;
+  background-image: url('/textures/ui/bricks.png');
+  image-rendering: pixelated;
 }

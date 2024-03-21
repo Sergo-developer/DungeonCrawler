@@ -1,4 +1,4 @@
-import { roomsDatabase, types } from '@/stores/roomsDatabase';
+import { chests, roomsDatabase, types } from '@/stores/roomsDatabase';
 import { randomRange } from '@/utils/random-range';
 
 const possibleSteps = [
@@ -19,9 +19,7 @@ const getRandomRoomByType = () => {
   } else if (type === 'treasure') {
     return {
       type: type,
-      treasure: {
-        isOpened: false,
-      },
+      treasure: structuredClone(chests[randomRange(0, chests.length - 1)]),
     };
   } else if (type === 'empty') {
     return {
@@ -52,6 +50,8 @@ export const createMap = (mapWidth: number, mapHeight: number, roomsCount: numbe
       currentRoomsCount += 1;
     }
   }
+
+  map[currentY][currentX] = { type: 'end' };
 
   return map;
 };

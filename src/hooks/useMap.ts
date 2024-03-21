@@ -7,8 +7,16 @@ export const useMap = () => {
   const mapWidth = 9;
   const mapHeight = 9;
   const roomsCount = 6;
+  const floorCount = ref<number>(1);
 
   const map = ref<Map>(createMap(mapWidth, mapHeight, roomsCount));
+
+  const mapRefresh = () => {
+    currentPosition.value = { x: 4, y: 4 };
+    map.value = createMap(mapWidth, mapHeight, roomsCount);
+    floorCount.value += 1;
+  };
+
   const currentPosition = ref<MapCoordinate>({ x: 4, y: 4 });
 
   const currentRoom = computed(
@@ -24,5 +32,5 @@ export const useMap = () => {
     }
   };
 
-  return { map, currentPosition, currentRoom, movePosition };
+  return { map, currentPosition, currentRoom, movePosition, mapRefresh, floorCount };
 };

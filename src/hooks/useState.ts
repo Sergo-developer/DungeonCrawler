@@ -3,12 +3,15 @@ import { usePlayer } from '@/hooks/usePlayer';
 import { useMap } from '@/hooks/useMap';
 import { useFight } from '@/hooks/useFight';
 import { useItems } from '@/hooks/useItems';
-import type { Ref } from 'vue';
+import type { ComputedRef, Ref } from 'vue';
+import { useEnemy } from '@/hooks/useEnemy';
+import { useReward } from '@/hooks/useReward';
+import { useLog } from '@/hooks/useLog';
 
 export const useState = (): State => {
   const { player, pointsAddedByLevel } = usePlayer();
-  const { map, currentPosition, movePosition, currentRoom } = useMap();
-  const { fightStep, isFight, totalPlayerDamage } = useFight(player, currentRoom as Ref<EnemyRoom>);
+  const { map, currentPosition, movePosition, currentRoom, mapRefresh, floorCount } = useMap();
+  const { logMessages, addMessageToLog } = useLog();
 
   const {
     useItem,
@@ -18,9 +21,42 @@ export const useState = (): State => {
     unequipItem,
     hoveredItem,
     getOnHoverItemInfo,
-  } = useItems(player);
+    getLootPool,
+    toDestroy,
+  } = useItems(player, pointsAddedByLevel, addMessageToLog);
+
+  const {
+    openChest,
+    confirmEarnedItems,
+    rewardItems,
+    isReward,
+    hoveredChest,
+    getOnHoverChestInfo,
+  } = useReward(currentRoom, addItem, getLootPool);
+
+  const { fightStep, isFight, isCrit, totalPlayerDamageWatcher } = useFight(
+    player,
+    currentRoom as Ref<EnemyRoom>,
+    openChest,
+    addMessageToLog,
+  );
+
+  const { hoveredEnemy, getOnHoverEnemyInfo, enemyMaxHealth } = useEnemy(
+    currentRoom as ComputedRef<EnemyRoom>,
+  );
 
   return {
+    addMessageToLog,
+    logMessages,
+    hoveredChest,
+    getOnHoverChestInfo,
+    isReward,
+    rewardItems,
+    openChest,
+    confirmEarnedItems,
+    enemyMaxHealth,
+    hoveredEnemy,
+    getOnHoverEnemyInfo,
     map,
     currentPosition,
     currentRoom,
@@ -29,7 +65,8 @@ export const useState = (): State => {
     player,
     pointsAddedByLevel,
     isFight,
-    totalPlayerDamage,
+    isCrit,
+    totalPlayerDamageWatcher,
     useItem,
     addItem,
     inventoryItems,
@@ -37,5 +74,9 @@ export const useState = (): State => {
     unequipItem,
     hoveredItem,
     getOnHoverItemInfo,
+    getLootPool,
+    mapRefresh,
+    floorCount,
+    toDestroy,
   };
 };

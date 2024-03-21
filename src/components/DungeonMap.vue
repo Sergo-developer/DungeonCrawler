@@ -3,13 +3,14 @@ import type { State } from '@/types/map';
 import { inject } from 'vue';
 import { mapImage } from '@/stores/roomsDatabase';
 
-const { map, currentPosition } = inject('state') as State;
+const { map, currentPosition, floorCount } = inject('state') as State;
 
 const checkIsCurrentRoom = (x: number, y: number) =>
   currentPosition.value.x === x && currentPosition.value.y === y;
 </script>
 <template>
   <div class="dungeon-map">
+    <div class="floor-count">floor: {{ floorCount }}</div>
     <div v-for="(row, y) in map" :key="y" class="dungeon-map-row">
       <div
         v-for="(room, x) in row"
@@ -23,9 +24,16 @@ const checkIsCurrentRoom = (x: number, y: number) =>
 </template>
 
 <style scoped>
+.floor-count {
+  font-size: 20px;
+  position: absolute;
+  color: white;
+}
+
 .dungeon-map {
   display: grid;
   width: fit-content;
+  height: fit-content;
   background-image: url('/textures/ui/planksTexture.png');
   background-size: 64px, 64px;
   border: solid 10px transparent;

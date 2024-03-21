@@ -1,15 +1,20 @@
-import type { Items, SlotCount } from '@/types/items';
-import { ref, watch } from 'vue';
-import type { Player, State } from '@/types/map';
+import type { Items, LoadoutItems, SlotCount } from '@/types/items';
+import { inject, ref, watch } from 'vue';
+import type { Player, PointsAddedByLevel, State } from '@/types/map';
 import type { Ref } from 'vue';
 import { items } from '@/stores/itemsDatabase';
 
-export const useItems = (player: Ref<Player>) => {
+export const useItems = (
+  player: Ref<Player>,
+  pointsAddedByLevel: Ref<PointsAddedByLevel>,
+  addMessageToLog,
+) => {
   const slotCount: SlotCount[] = new Array(35).fill(null);
 
   const inventoryItems = ref(slotCount);
-  const loadoutItems = ref<SlotCount>([null, null, null, null, null, null]);
+  const loadoutItems = ref<LoadoutItems>([null, null, null, null, null, null]);
   const itemTypesToEquip = ['helmet', 'body', 'pants', 'ring', 'jewerly', 'weapon'];
+  const toDestroy = ref(false);
 
   const statsNames = [
     'armor',
@@ -22,6 +27,10 @@ export const useItems = (player: Ref<Player>) => {
   ];
 
   const hoveredItem = ref<SlotCount>();
+
+  const getLootPool = (loot: string[]) => {
+    return loot.map((el) => structuredClone(items.find((item) => item.name === el)));
+  };
 
   watch(loadoutItems.value, () => {
     const itemsStats = {
@@ -36,17 +45,19 @@ export const useItems = (player: Ref<Player>) => {
 
     for (let j = 0; j < loadoutItems.value.length; j++) {
       for (let i = 0; i < statsNames.length; i++) {
-        if (loadoutItems.value[j]?.type[statsNames[i]] != null) {
+        if ((loadoutItems.value[j]?.type[statsNames[i]] as Items) != null) {
           itemsStats[statsNames[i]] += loadoutItems.value[j]?.type[statsNames[i]];
         }
       }
     }
 
     for (let i = 0; i < statsNames.length; i++) {
-      player.value[statsNames[i]] = itemsStats[statsNames[i]];
+      itemsStats[statsNames[i]] += pointsAddedByLevel.value[statsNames[i]] | 0;
     }
 
-    console.log(itemsStats.value);
+    for (let i = 0; i < statsNames.length; i++) {
+      player.value[statsNames[i]] = itemsStats[statsNames[i]];
+    }
   });
 
   const getOnHoverItemInfo = (item: SlotCount) => {
@@ -55,6 +66,10 @@ export const useItems = (player: Ref<Player>) => {
 
   const useItem = (i: number) => {
     if (inventoryItems.value[i] != null) {
+      if (toDestroy.value) {
+        inventoryItems.value[i] = null;
+      }
+
       for (let j = 0; j < itemTypesToEquip.length; j++) {
         if (inventoryItems.value[i]?.type.name === itemTypesToEquip[j]) {
           equipItems(i, j);
@@ -62,9 +77,28 @@ export const useItems = (player: Ref<Player>) => {
       }
 
       if (inventoryItems.value[i]?.type.name === 'potion') {
+        if (inventoryItems.value[i]?.feature === 'Resets upgraded skills') {
+          useResetSkills();
+          addMessageToLog('You forgot all the skills');
+        }
+
         usePotion(i);
       }
     }
+  };
+
+  const useResetSkills = () => {
+    player.value.intelligent -= pointsAddedByLevel.value.intelligent;
+    player.value.strength -= pointsAddedByLevel.value.strength;
+    player.value.agility -= pointsAddedByLevel.value.agility;
+
+    pointsAddedByLevel.value = {
+      intelligent: 0,
+      strength: 0,
+      agility: 0,
+    };
+
+    player.value.statsPoint = player.value.level - 1;
   };
 
   const usePotion = (inventorySlot: number) => {
@@ -72,8 +106,22 @@ export const useItems = (player: Ref<Player>) => {
       player.value.health + inventoryItems.value[inventorySlot]?.type.healthRestore >
       player.value.maxHealth
     ) {
+      addMessageToLog(
+        'Player restore ' +
+          (player.value.maxHealth - player.value.health) +
+          ' HP by ' +
+          inventoryItems.value[inventorySlot]?.name,
+      );
+
       player.value.health = player.value.maxHealth;
     } else {
+      addMessageToLog(
+        'Player restore ' +
+          inventoryItems.value[inventorySlot]?.type.healthRestore +
+          ' HP by ' +
+          inventoryItems.value[inventorySlot]?.name,
+      );
+
       player.value.health += inventoryItems.value[inventorySlot]?.type.healthRestore;
     }
 
@@ -127,5 +175,7 @@ export const useItems = (player: Ref<Player>) => {
     unequipItem,
     hoveredItem,
     getOnHoverItemInfo,
+    getLootPool,
+    toDestroy,
   };
 };

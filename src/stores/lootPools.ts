@@ -1,13 +1,54 @@
-import { items } from '@/stores/itemsDatabase';
+export const commonChest = [
+  'Broken sword',
+  'Small potion',
+  'Medium potion',
+  'Leather helmet',
+  'Leather pants',
+  'Leather jacket',
+];
+export const uncommonChest = [
+  'Redstone necklace',
+  'Bluestone necklace',
+  'Purplestone necklace',
+  'Small potion',
+  'Medium potion',
+  'Huge potion',
+  'Falshion',
+  'Armored helmet',
+  'Armored pants',
+  'Armored jacket',
+];
 
-export const commonChest = ['knife', 'Claymore', 'Ordinary sword'];
+export const PoisonSpiderLoot = ['Purplestone ring', 'Small potion', 'Spider`s torn'];
+export const spiderLoot = [
+  'Purplestone ring',
+  'Small potion',
+  'Medium potion',
+  'Spider helmet',
+  'Spider pants',
+  'Spider jacket',
+  'Spider`s torn',
+  'Poison saber',
+];
 
-export const getLootPool = (loot: string[]) => {
-  const lootpool = [];
+export const dwarfLoot = ['Small potion', 'Pickaxe'];
 
-  for (let i = 0; i < loot.length; i++) {
-    lootpool[i] = structuredClone(items).find((it) => (it.name = loot[i]));
-  }
+export const skeletonLoot = ['Small potion', 'Bone amulet', 'Antique sword'];
 
-  return lootpool;
-};
+export const crusaderSkeletonLoot = [
+  'Small potion',
+  'Medium potion',
+  'Bone amulet',
+  'Worn gorget',
+  'Rusty tophelm',
+  'Battle axe',
+  'Claymore',
+];
+
+export const undeadSoldierLoot = [
+  'Small potion',
+  'Medium potion',
+  'Bowler hat',
+  'Metal chest plate',
+  'Torn pants',
+];

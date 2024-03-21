@@ -8,11 +8,21 @@ export interface MapCoordinate {
 
 export interface Enemy {
   name: string;
+  description: string;
   health: number;
   armor: number;
   damage: number;
   xp: number;
+  reward: string[];
   image: string;
+}
+export interface Chest {
+  name: string;
+  description: string;
+  quality: string;
+  reward: string[];
+  image: string;
+  isOpened?: boolean;
 }
 
 export interface Player {
@@ -49,7 +59,7 @@ export interface EmptyRoom {
 }
 export interface TreasureRoom {
   type: 'treasure';
-  treasure: { isOpened: boolean };
+  treasure: Chest;
 }
 
 export type MapRoom = EnemyRoom | EmptyRoom | TreasureRoom | null;
@@ -57,6 +67,13 @@ export type PlayableRoom = EnemyRoom | EmptyRoom;
 export type Map = MapRoom[][];
 
 export interface State {
+  logMessages: string[];
+  addMessageToLog: (message: string) => void;
+  rewardItems: [Items];
+  openChest: (lootPool: [string]) => void;
+  confirmEarnedItems: () => void;
+  hoveredEnemy: Ref<Enemy | null>;
+  getOnHoverEnemyInfo: (enemy: Enemy) => void;
   map: Ref<Map>;
   currentPosition: Ref<MapCoordinate>;
   currentRoom: ComputedRef<PlayableRoom>;
@@ -65,7 +82,8 @@ export interface State {
   player: Ref<Player>;
   pointsAddedByLevel: Ref<PointsAddedByLevel>;
   isFight: Ref<boolean>;
-  totalPlayerDamage: Ref<number>;
+  isCrit: Ref<boolean>;
+  totalPlayerDamageWatcher: Ref<number>;
   useItem: (i: number) => void;
   addItem: (itemToGet: Items[]) => void;
   inventoryItems: SlotCount;
@@ -73,4 +91,7 @@ export interface State {
   unequipItem: (i: number) => void;
   hoveredItem: Ref<SlotCount>;
   getOnHoverItemInfo: (item: SlotCount) => void;
+  getLootPool: (loot: string[]) => Items[];
+  mapRefresh: () => void;
+  floorCount: number;
 }

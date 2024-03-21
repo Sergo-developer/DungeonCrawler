@@ -1,12 +1,67 @@
 <script setup lang="ts">
-import { quality } from '@/stores/itemsDatabase';
-import { inject } from 'vue';
+import { itemTypeSortPriority, quality, qualityRarity } from '@/stores/itemsDatabase';
+import { computed, inject, onBeforeMount, onMounted, ref } from 'vue';
 import type { State } from '@/types/map';
-import PlayerInventoryTooltip from '@/components/PlayerInventoryTooltip.vue';
+import PlayerInventoryTooltip from '@/components/tooltips/PlayerInventoryTooltip.vue';
+import EnemyTooltip from '@/components/tooltips/EnemyTooltip.vue';
+import ChestTooltip from '@/components/tooltips/ChestTooltip.vue';
 
-const { player, useItem, inventoryItems, loadoutItems, unequipItem, getOnHoverItemInfo } = inject(
-  'state',
-) as State;
+const {
+  player,
+  useItem,
+  inventoryItems,
+  loadoutItems,
+  unequipItem,
+  getOnHoverItemInfo,
+  addItem,
+  getLootPool,
+  toDestroy,
+  pointsAddedByLevel,
+} = inject('state') as State;
+
+const sortInventory = () => {
+  if (inventoryItems.value != null) {
+    inventoryItems.value = inventoryItems.value
+      .sort((a, b) => (a != null && b === null ? -1 : 1))
+      .sort((a, b) =>
+        itemTypeSortPriority[a?.type.name] < itemTypeSortPriority[b?.type.name] ? -1 : 1,
+      )
+      .sort((a, b) => (qualityRarity[a?.quality] > qualityRarity[b?.quality] ? -1 : 1));
+  }
+};
+
+const sortInventoryByType = () => {
+  if (inventoryItems.value != null) {
+    inventoryItems.value = inventoryItems.value
+      .sort((a, b) => (a != null && b === null ? -1 : 1))
+      .sort((a, b) => (qualityRarity[a?.quality] > qualityRarity[b?.quality] ? -1 : 1))
+      .sort((a, b) =>
+        itemTypeSortPriority[a?.type.name] < itemTypeSortPriority[b?.type.name] ? -1 : 1,
+      );
+  }
+};
+
+const toDestroyItems = () => {
+  toDestroy.value = !toDestroy.value;
+};
+
+const intStatAdd = () => {
+  player.value.intelligent += 1;
+  pointsAddedByLevel.value.intelligent += 1;
+  player.value.statsPoint -= 1;
+};
+
+const strengthStatAdd = () => {
+  player.value.strength += 1;
+  pointsAddedByLevel.value.strength += 1;
+  player.value.statsPoint -= 1;
+};
+
+const agilityStatAdd = () => {
+  player.value.agility += 1;
+  pointsAddedByLevel.value.agility += 1;
+  player.value.statsPoint -= 1;
+};
 </script>
 
 <template>
@@ -58,9 +113,22 @@ const { player, useItem, inventoryItems, loadoutItems, unequipItem, getOnHoverIt
         <div>Crit chance: {{ player.critChance }}%</div>
         <div>Crit modificator: {{ player.critMod }}x</div>
         <div>Armor: {{ player.armor }}</div>
-        <div>Intelligent: {{ player.intelligent }}</div>
-        <div>Strength: {{ player.strength }}</div>
-        <div>Agility: {{ player.agility }}</div>
+        <div class="stats-with-button">
+          Intelligent: {{ player.intelligent }}
+          <div v-if="player.statsPoint" class="stats-button" @click="intStatAdd">+</div>
+        </div>
+        <div class="stats-with-button">
+          Strength: {{ player.strength }}
+          <div v-if="player.statsPoint" class="stats-button" @click="strengthStatAdd">+</div>
+        </div>
+        <div class="stats-with-button">
+          Agility: {{ player.agility }}
+          <div v-if="player.statsPoint" class="stats-button" @click="agilityStatAdd">+</div>
+        </div>
+        <div v-if="player.statsPoint" style="color: yellow">
+          Available points: {{ player.statsPoint }}
+        </div>
+        <div v-if="!player.statsPoint"></div>
       </div>
       <div>
         <div
@@ -108,7 +176,11 @@ const { player, useItem, inventoryItems, loadoutItems, unequipItem, getOnHoverIt
         </div>
       </div>
     </div>
-    <PlayerInventoryTooltip />
+    <div class="use-bar">
+      <PlayerInventoryTooltip />
+      <EnemyTooltip />
+      <ChestTooltip />
+    </div>
     <div class="inventory-slots">
       <div
         v-for="(item, i) in inventoryItems"
@@ -125,10 +197,57 @@ const { player, useItem, inventoryItems, loadoutItems, unequipItem, getOnHoverIt
         </div>
       </div>
     </div>
+    <div class="bottom-wrapper">
+      <div class="sort-button" @click="sortInventory">Sort by quality</div>
+      <div class="sort-button" @click="sortInventoryByType">Sort by type</div>
+      <div class="sort-button" @click="toDestroyItems" :class="{ destroy: toDestroy }">
+        Destroy item
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
+.stats-button {
+  cursor: pointer;
+  border: white solid 2px;
+  height: 15px;
+  width: 15px;
+}
+.stats-with-button {
+  display: flex;
+  justify-content: center;
+}
+.bottom-wrapper {
+  background-color: rgba(70, 70, 70, 0.65);
+  display: flex;
+  justify-content: space-between;
+}
+.sort-button {
+  background-color: #464646;
+  border: white solid 2px;
+  width: 120px;
+  color: white;
+  cursor: pointer;
+}
+
+.sort-button:hover {
+  background-color: white;
+  color: #464646;
+  border: #464646 solid 2px;
+}
+.sort-button.destroy {
+  background-color: red;
+  border: #620a15 solid 2px;
+}
+
+.use-bar {
+  display: flex;
+  color: white;
+  height: 140px;
+  background-color: black;
+  border: white inset 2px;
+}
 .item-image {
   color: white;
   display: flex;
@@ -162,7 +281,7 @@ const { player, useItem, inventoryItems, loadoutItems, unequipItem, getOnHoverIt
   width: 64px;
   background-size: 64px, 64px;
   background-repeat: no-repeat;
-  border: #646464 solid 4px;
+  border: #646464 inset 4px;
 }
 
 .item-slot.with-item {
@@ -199,8 +318,9 @@ const { player, useItem, inventoryItems, loadoutItems, unequipItem, getOnHoverIt
 
 .inventory-wrapper {
   height: fit-content;
-  width: 500px;
+  width: 100%;
   border: 25px solid transparent;
   border-image: url('/textures/ui/border.png') 4 round;
+  border-left: transparent;
 }
 </style>

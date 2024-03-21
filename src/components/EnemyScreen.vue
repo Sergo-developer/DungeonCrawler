@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { type ComputedRef, inject, ref, watch } from 'vue';
 import type { EnemyRoom, State } from '@/types/map';
+import RewardScreen from '@/components/RewardScreen.vue';
 
-const { currentRoom, fightStep, isFight, totalPlayerDamage } = inject('state') as State;
-
-const enemyMaxHealth = ref(0);
-
-watch(
-  currentRoom as ComputedRef<EnemyRoom>,
-  (value) => {
-    enemyMaxHealth.value = value.enemy.health;
-  },
-  { immediate: true },
-);
+const {
+  currentRoom,
+  fightStep,
+  isCrit,
+  isFight,
+  totalPlayerDamageWatcher,
+  getOnHoverEnemyInfo,
+  hoveredEnemy,
+  enemyMaxHealth,
+  isReward,
+} = inject('state') as State;
 </script>
 
 <template>
@@ -30,19 +31,34 @@ watch(
       </div>
     </div>
     <div
+      v-if="!currentRoom.isDefeated"
       class="enemy-image"
       :class="{ attacked: isFight }"
       :style="{ backgroundImage: `url(${currentRoom.enemy.image})` }"
+      @mouseover="getOnHoverEnemyInfo(currentRoom.enemy)"
+      @mouseleave="hoveredEnemy = null"
     >
-      <div v-if="isFight">-{{ totalPlayerDamage }}</div>
+      <div v-if="isFight" :class="{ 'crit-text': isCrit }">-{{ totalPlayerDamageWatcher }}</div>
     </div>
-    <div v-if="!currentRoom.isDefeated">
+    <div v-if="!currentRoom.isDefeated" class="attack-buttons">
       <div v-if="!isFight" class="attack-button" @click="fightStep">Attack</div>
       <div v-if="isFight" class="attack-button">...</div>
+      <div v-if="isFight" class="attack-button">...</div>
+      <div v-if="!isFight" class="attack-button">Escape</div>
     </div>
+    <RewardScreen v-if="isReward" />
   </div>
 </template>
 <style scoped>
+.attack-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.crit-text {
+  color: #fff200;
+}
+
 .enemy-bar-wrapper {
   display: flex;
   gap: 10px;
