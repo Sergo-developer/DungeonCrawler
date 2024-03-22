@@ -36,7 +36,8 @@ export const useFight = (
     currentRoom.value.enemy.health -= totalPlayerDamageWatcher.value;
 
     addMessageToLog(
-      'Player hit ' +
+      player.value.name +
+        ' hit ' +
         currentRoom.value.enemy.name +
         ' with ' +
         totalPlayerDamageWatcher.value +
@@ -63,7 +64,9 @@ export const useFight = (
 
     addMessageToLog(
       currentRoom.value.enemy.name +
-        ' hit Player with ' +
+        ' hit ' +
+        player.value.name +
+        ' with ' +
         Math.floor(
           currentRoom.value.enemy.damage -
             currentRoom.value.enemy.damage * (player.value.armor / 100),

@@ -7,11 +7,13 @@ import type { ComputedRef, Ref } from 'vue';
 import { useEnemy } from '@/hooks/useEnemy';
 import { useReward } from '@/hooks/useReward';
 import { useLog } from '@/hooks/useLog';
+import { useAbilities } from '@/hooks/useAbilities';
 
 export const useState = (): State => {
-  const { player, pointsAddedByLevel } = usePlayer();
+  const { player, pointsAddedByLevel, isPlayerAuthorized } = usePlayer();
   const { map, currentPosition, movePosition, currentRoom, mapRefresh, floorCount } = useMap();
   const { logMessages, addMessageToLog } = useLog();
+  const { useAbility } = useAbilities(player, addMessageToLog);
 
   const {
     useItem,
@@ -46,6 +48,8 @@ export const useState = (): State => {
   );
 
   return {
+    useAbility,
+    isPlayerAuthorized,
     addMessageToLog,
     logMessages,
     hoveredChest,

@@ -7,43 +7,48 @@ import type { State } from './types/map';
 import PlayerInventory from '@/components/PlayerInventory.vue';
 import CheatMenu from '@/components/CheatMenu.vue';
 import GameLog from '@/components/GameLog.vue';
+import PlayerAuthorization from '@/components/PlayerAuthorization.vue';
 
 const state: State = useState();
 const curentScreen = ref('dungeon');
 
-const switchCurentScreen = (screen: 'dungeon' | 'stats' | 'achievements' | 'cheat') => {
+const switchCurrentScreen = (screen: 'dungeon' | 'stats' | 'achievements' | 'cheat') => {
   curentScreen.value = screen;
 };
 
 provide('state', state);
 
-const { addItem, getLootPool } = state as State;
+const { addItem, getLootPool, isPlayerAuthorized } = state as State;
 
 addItem(getLootPool(['Knife']));
 </script>
 
 <template>
-  <div class="menu">
-    <div @click="switchCurentScreen('dungeon')" class="menu-button">Dungeon</div>
-    <div @click="switchCurentScreen('stats')" class="menu-button">Stats</div>
-    <div @click="switchCurentScreen('achievements')" class="menu-button">Achievements</div>
-    <div @click="switchCurentScreen('cheat')" class="menu-button">Cheat-menu</div>
-  </div>
-  <div class="game-wrapper">
-    <div v-if="curentScreen === 'dungeon'" class="game-main-area">
-      <div class="left-menu">
-        <DungeonMap />
-        <GameLog />
-      </div>
-      <div class="center">
-        <MainScreen />
-        <PlayerInventory />
-      </div>
+  <PlayerAuthorization v-if="!isPlayerAuthorized" />
+  <div v-if="isPlayerAuthorized">
+    <div class="menu">
+      <div @click="switchCurrentScreen('dungeon')" class="menu-button">Dungeon</div>
+      <div @click="switchCurrentScreen('stats')" class="menu-button">Stats</div>
+      <div @click="switchCurrentScreen('achievements')" class="menu-button">Achievements</div>
+      <div @click="switchCurrentScreen('cheat')" class="menu-button">Cheat-menu</div>
     </div>
-    <div v-if="curentScreen === 'stats'">Stats here</div>
-    <div v-if="curentScreen === 'achievements'">achievements</div>
-    <div v-if="curentScreen === 'cheat'"><CheatMenu /></div>
+    <div class="game-wrapper">
+      <div v-if="curentScreen === 'dungeon'" class="game-main-area">
+        <div class="left-menu">
+          <DungeonMap />
+          <GameLog />
+        </div>
+        <div class="center">
+          <MainScreen />
+          <PlayerInventory />
+        </div>
+      </div>
+      <div v-if="curentScreen === 'stats'">Stats here</div>
+      <div v-if="curentScreen === 'achievements'">achievements</div>
+      <div v-if="curentScreen === 'cheat'"><CheatMenu /></div>
+    </div>
   </div>
+  <div v-if="!isPlayerAuthorized" class="copyright">SergoJpg`s autistic labs 2024 © all rights reserved</div>
 </template>
 
 <style scoped>
@@ -76,7 +81,7 @@ addItem(getLootPool(['Knife']));
   background-image: url('/textures/ui/rock.png');
   background-size: 50px 50px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
 }
 .center {
   display: flex;
@@ -89,8 +94,12 @@ addItem(getLootPool(['Knife']));
 }
 
 .game-wrapper {
-  display: flex;
   height: 100%;
   image-rendering: pixelated;
+}
+.copyright {
+  position: absolute;
+  color: white;
+  bottom: 0px;
 }
 </style>

@@ -1,5 +1,6 @@
 import type { ComputedRef, Ref } from 'vue';
 import type { Items, SlotCount } from '@/types/items';
+import type { GameClasses } from '@/stores/gameClasses';
 
 export interface MapCoordinate {
   x: number;
@@ -26,10 +27,13 @@ export interface Chest {
 }
 
 export interface Player {
+  name: string;
   level: number;
   experience: number;
   health: number;
-  maxHealth: number;
+  mana: number;
+  maxMana: 3;
+  maxHealth: 100;
   strength: number;
   intelligent: number;
   statsPoint: number;
@@ -38,6 +42,7 @@ export interface Player {
   damage: number;
   armor: number;
   agility: number;
+  class: GameClasses;
 }
 
 export interface PointsAddedByLevel {

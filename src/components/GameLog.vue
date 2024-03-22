@@ -12,8 +12,10 @@ const { logMessages } = inject('state') as State;
 
 <style scoped>
 .log-area {
+  border-top: 25px solid transparent;
+  border-image: url('/textures/ui/border.png') 4 round;
   color: white;
-  height: 460px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   background-color: black;

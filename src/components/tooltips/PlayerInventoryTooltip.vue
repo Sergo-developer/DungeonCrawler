@@ -39,7 +39,6 @@ const { hoveredItem } = inject('state') as State;
 .item-description {
   text-align: center;
   height: 100%;
-  border: white inset 2px;
 }
 .item-name {
   text-align: center;
@@ -66,6 +65,7 @@ const { hoveredItem } = inject('state') as State;
   font-size: 20px;
   text-align: center;
   width: 100%;
+  border-left: white inset 2px;
 }
 
 .use-bar {

@@ -128,7 +128,7 @@ const agilityStatAdd = () => {
         <div v-if="player.statsPoint" style="color: yellow">
           Available points: {{ player.statsPoint }}
         </div>
-        <div v-if="!player.statsPoint"></div>
+        <div style="color: transparent" v-if="!player.statsPoint">p</div>
       </div>
       <div>
         <div

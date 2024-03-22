@@ -34,12 +34,20 @@ console.log(items.map((val) => val.name));
         </div>
       </div>
     </div>
-    <PlayerStats />
-    <PlayersAbilities />
+    <div class="bottom-area">
+      <PlayerStats />
+      <PlayersAbilities />
+    </div>
   </div>
 </template>
 
 <style scoped>
+.bottom-area {
+  background-image: url('/textures/ui/rock.png');
+  background-size: 80px;
+  border-top: 25px solid transparent;
+  border-image: url('/textures/ui/border.png') 4 round;
+}
 .border {
   border: 25px solid transparent;
   border-image: url('/textures/ui/border.png') 4 round;

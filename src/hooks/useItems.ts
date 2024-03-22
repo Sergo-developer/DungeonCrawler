@@ -107,7 +107,8 @@ export const useItems = (
       player.value.maxHealth
     ) {
       addMessageToLog(
-        'Player restore ' +
+        player.value.name +
+          ' restore ' +
           (player.value.maxHealth - player.value.health) +
           ' HP by ' +
           inventoryItems.value[inventorySlot]?.name,
@@ -116,7 +117,8 @@ export const useItems = (
       player.value.health = player.value.maxHealth;
     } else {
       addMessageToLog(
-        'Player restore ' +
+        player.value.name +
+          ' restore ' +
           inventoryItems.value[inventorySlot]?.type.healthRestore +
           ' HP by ' +
           inventoryItems.value[inventorySlot]?.name,
